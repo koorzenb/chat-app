@@ -18,8 +18,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          buttonTheme: ButtonTheme.of(context).copyWith(
+            buttonColor: Colors.blue,
+            textTheme: ButtonTextTheme.primary,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          primarySwatch: Colors.blue,
+          colorScheme: ColorScheme(
+              brightness: Brightness.light,
+              primary: Colors.blue,
+              onPrimary: Colors.white,
+              secondary: Colors.lightBlueAccent,
+              onSecondary: Colors.white10,
+              error: Colors.red,
+              onError: Colors.white,
+              background: Colors.blue.shade800,
+              onBackground: Colors.white,
+              surface: Colors.grey,
+              onSurface: Colors.grey.shade700)),
       home: const ChatScreen(),
     );
   }
