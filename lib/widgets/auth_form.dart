@@ -8,6 +8,19 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
+  final _formKey = GlobalKey<FormState>();
+  String _userEmail = '';
+  String _userName = '';
+  String _userPassword = '';
+
+  _trySubmit() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (isValid) {
+      _formKey.currentState?.save();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -17,33 +30,58 @@ class _AuthFormState extends State<AuthForm> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Form(
+                key: _formKey,
                 child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email address'),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Username'),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Login'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Create new account'),
-                ),
-              ],
-            )),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty || !value.contains('@')) {
+                          return 'Please enter valid email address';
+                        } else {
+                          return null;
+                        }
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(labelText: 'Email address'),
+                      onSaved: (value) => _userEmail = value!,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 4) {
+                          return 'Please enter at least 4 characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(labelText: 'Username'),
+                      onSaved: (value) => _userName = value!,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 7) {
+                          return 'Password must be at least 7 characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(labelText: 'Password'),
+                      obscureText: true,
+                      onSaved: (value) => _userPassword = value!,
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    ElevatedButton(
+                      onPressed: _trySubmit,
+                      child: const Text('Login'),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('Create new account'),
+                    ),
+                  ],
+                )),
           ),
         ),
       ),
