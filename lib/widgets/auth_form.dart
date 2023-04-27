@@ -12,9 +12,11 @@ class _AuthFormState extends State<AuthForm> {
   String _userEmail = '';
   String _userName = '';
   String _userPassword = '';
+  bool _isLogin = false;
 
   _trySubmit() {
     final isValid = _formKey.currentState?.validate() ?? false;
+    FocusScope.of(context).unfocus();
 
     if (isValid) {
       _formKey.currentState?.save();
@@ -35,6 +37,7 @@ class _AuthFormState extends State<AuthForm> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
+                      key: const ValueKey('email'),
                       validator: (value) {
                         if (value!.isEmpty || !value.contains('@')) {
                           return 'Please enter valid email address';
@@ -47,6 +50,7 @@ class _AuthFormState extends State<AuthForm> {
                       onSaved: (value) => _userEmail = value!,
                     ),
                     TextFormField(
+                      key: const ValueKey('password'),
                       validator: (value) {
                         if (value!.isEmpty || value.length < 4) {
                           return 'Please enter at least 4 characters';
@@ -57,28 +61,34 @@ class _AuthFormState extends State<AuthForm> {
                       decoration: const InputDecoration(labelText: 'Username'),
                       onSaved: (value) => _userName = value!,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty || value.length < 7) {
-                          return 'Password must be at least 7 characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: const InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                      onSaved: (value) => _userPassword = value!,
-                    ),
+                    if (!_isLogin)
+                      TextFormField(
+                        key: const ValueKey('username'),
+                        validator: (value) {
+                          if (value!.isEmpty || value.length < 7) {
+                            return 'Password must be at least 7 characters';
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(labelText: 'Password'),
+                        obscureText: true,
+                        onSaved: (value) => _userPassword = value!,
+                      ),
                     const SizedBox(
                       height: 12,
                     ),
                     ElevatedButton(
                       onPressed: _trySubmit,
-                      child: const Text('Login'),
+                      child: Text(_isLogin ? 'Login' : "Sign up"),
                     ),
                     TextButton(
-                      onPressed: () {},
-                      child: const Text('Create new account'),
+                      onPressed: () {
+                        setState(() {
+                          _isLogin = !_isLogin;
+                        });
+                      },
+                      child: Text(_isLogin ? 'Create new account' : 'I already have an account'),
                     ),
                   ],
                 )),
