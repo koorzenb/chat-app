@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({super.key});
+  final void Function(
+    String email,
+    String password,
+    String username,
+    bool isLogin,
+  ) submitFn;
+
+  const AuthForm(this.submitFn, {super.key});
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -10,8 +17,8 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   String _userEmail = '';
-  String _userName = '';
   String _userPassword = '';
+  String _userName = '';
   bool _isLogin = false;
 
   _trySubmit() {
@@ -20,6 +27,7 @@ class _AuthFormState extends State<AuthForm> {
 
     if (isValid) {
       _formKey.currentState?.save();
+      widget.submitFn(_userEmail, _userPassword, _userName, _isLogin);
     }
   }
 
@@ -49,32 +57,32 @@ class _AuthFormState extends State<AuthForm> {
                       decoration: const InputDecoration(labelText: 'Email address'),
                       onSaved: (value) => _userEmail = value!,
                     ),
-                    TextFormField(
-                      key: const ValueKey('password'),
-                      validator: (value) {
-                        if (value!.isEmpty || value.length < 4) {
-                          return 'Please enter at least 4 characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: const InputDecoration(labelText: 'Username'),
-                      onSaved: (value) => _userName = value!,
-                    ),
                     if (!_isLogin)
                       TextFormField(
-                        key: const ValueKey('username'),
+                        key: const ValueKey('password'),
                         validator: (value) {
-                          if (value!.isEmpty || value.length < 7) {
-                            return 'Password must be at least 7 characters';
+                          if (value!.isEmpty || value.length < 4) {
+                            return 'Please enter at least 4 characters';
                           } else {
                             return null;
                           }
                         },
-                        decoration: const InputDecoration(labelText: 'Password'),
-                        obscureText: true,
-                        onSaved: (value) => _userPassword = value!,
+                        decoration: const InputDecoration(labelText: 'Username'),
+                        onSaved: (value) => _userName = value!,
                       ),
+                    TextFormField(
+                      key: const ValueKey('username'),
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 7) {
+                          return 'Password must be at least 7 characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(labelText: 'Password'),
+                      obscureText: true,
+                      onSaved: (value) => _userPassword = value!,
+                    ),
                     const SizedBox(
                       height: 12,
                     ),
