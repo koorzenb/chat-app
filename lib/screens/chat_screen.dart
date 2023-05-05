@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
-  // https://console.firebase.google.com/project/flutter-chat-app-75c3b/firestore/data/~2Fchats~2FIs8oosufqhCf1BaQuMCx~2Fmessages~2Ff2pNawCD3ajk8cFC89sg
 
   @override
   Widget build(BuildContext context) {
