@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat App',
       theme: ThemeData().copyWith(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 63, 17, 177))),
-      // home: const AuthScreen(),
+      home: const AuthScreen(),
     );
   }
 }
