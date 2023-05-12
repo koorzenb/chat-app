@@ -8,6 +8,18 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final _formKey = GlobalKey<FormState>();
+  var _enteredEmail;
+  var _enteredPassword;
+
+  _submit() {
+    final isValid = _formKey.currentState!.validate();
+
+    if (isValid) {
+      _formKey.currentState!.save();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,10 +53,18 @@ class _AuthScreenState extends State<AuthScreen> {
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
                         textCapitalization: TextCapitalization.none,
+                        onSaved: (newValue) => _enteredEmail = newValue,
                       ),
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Password'),
                         obscureText: true,
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please enter password';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) => _enteredPassword = newValue,
                       )
                     ],
                   )),
