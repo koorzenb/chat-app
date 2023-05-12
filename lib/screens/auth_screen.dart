@@ -11,6 +11,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredEmail;
   var _enteredPassword;
+  var _isLogin = true;
 
   _submit() {
     final isValid = _formKey.currentState!.validate();
@@ -65,7 +66,21 @@ class _AuthScreenState extends State<AuthScreen> {
                           return null;
                         },
                         onSaved: (newValue) => _enteredPassword = newValue,
-                      )
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      ElevatedButton(
+                        onPressed: () => setState(() => _isLogin = !_isLogin),
+                        // style: ElevatedButton.styleFrom(
+                        //   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                        // ),
+                        child: Text(_isLogin ? 'Login' : 'Signup'),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(_isLogin ? 'Create an account' : 'I already have an account'),
+                      ),
                     ],
                   )),
                 ),
