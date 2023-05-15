@@ -11,6 +11,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  // https://console.firebase.google.com/project/flutter-chat-app-75c3b/authentication/users
   final _formKey = GlobalKey<FormState>();
   var _enteredEmail;
   var _enteredPassword;
@@ -23,6 +24,7 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
+    _formKey.currentState!.save();
     try {
       if (_isLogin) {
         final userCredentials = await _firebase.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
@@ -71,43 +73,44 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Form(
+                      key: _formKey,
                       child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: 'Email Address'),
-                        keyboardType: TextInputType.emailAddress,
-                        autocorrect: false,
-                        textCapitalization: TextCapitalization.none,
-                        onSaved: (newValue) => _enteredEmail = newValue,
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: 'Password'),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please enter password';
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) => _enteredPassword = newValue,
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      ElevatedButton(
-                        onPressed: () => setState(() => _isLogin = !_isLogin),
-                        // style: ElevatedButton.styleFrom(
-                        //   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                        // ),
-                        child: Text(_isLogin ? 'Login' : 'Signup'),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(_isLogin ? 'Create an account' : 'I already have an account'),
-                      ),
-                    ],
-                  )),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            decoration: const InputDecoration(labelText: 'Email Address'),
+                            keyboardType: TextInputType.emailAddress,
+                            autocorrect: false,
+                            textCapitalization: TextCapitalization.none,
+                            onSaved: (newValue) => _enteredEmail = newValue,
+                          ),
+                          TextFormField(
+                            decoration: const InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please enter password';
+                              }
+                              return null;
+                            },
+                            onSaved: (newValue) => _enteredPassword = newValue,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          ElevatedButton(
+                            onPressed: _submit,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            ),
+                            child: Text(_isLogin ? 'Login' : 'Signup'),
+                          ),
+                          TextButton(
+                            onPressed: () => setState(() => _isLogin = !_isLogin),
+                            child: Text(_isLogin ? 'Create an account' : 'I already have an account'),
+                          ),
+                        ],
+                      )),
                 ),
               ),
             )
