@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,11 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   // https://console.firebase.google.com/project/flutter-chat-app-75c3b/authentication/users
   final _formKey = GlobalKey<FormState>();
-  var _enteredEmail;
-  var _enteredPassword;
+  var _enteredEmail = '';
+  var _enteredPassword = '';
   var _isLogin = true;
   File? _selectedImage;
-  var _isAuthenticating;
+  var _isAuthenticating = false;
 
   _submit() async {
     final isValid = _formKey.currentState!.validate();
@@ -42,6 +43,12 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance.collection('users').doc(userCredentials.user!.uid).set({
+          'username': 'todo',
+          'email': _enteredEmail,
+          'url': imageUrl,
+        });
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -56,10 +63,6 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isAuthenticating = false;
       });
-    }
-
-    if (isValid) {
-      _formKey.currentState!.save();
     }
   }
 
@@ -101,7 +104,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
-                            onSaved: (newValue) => _enteredEmail = newValue,
+                            onSaved: (newValue) => _enteredEmail = newValue!,
                           ),
                           TextFormField(
                             decoration: const InputDecoration(labelText: 'Password'),
@@ -112,12 +115,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               }
                               return null;
                             },
-                            onSaved: (newValue) => _enteredPassword = newValue,
+                            onSaved: (newValue) => _enteredPassword = newValue!,
                           ),
                           const SizedBox(
                             height: 16,
                           ),
-                          if (_isAuthenticating) CircularProgressIndicator(),
+                          if (_isAuthenticating) const CircularProgressIndicator(),
                           if (!_isAuthenticating)
                             ElevatedButton(
                               onPressed: _submit,
