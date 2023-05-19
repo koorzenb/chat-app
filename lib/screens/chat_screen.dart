@@ -16,10 +16,12 @@ class _ChatScreenState extends State<ChatScreen> {
     final fcm = FirebaseMessaging.instance;
     final notificationSettings = await fcm.requestPermission();
     final token = await fcm.getToken();
+    print(token);
   }
 
   @override
   void initState() {
+    setupPushNotifications();
     super.initState();
   }
 
