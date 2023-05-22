@@ -9,7 +9,9 @@ class SplashScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('FlutterChat'),
       ),
-      body: const Center(child: Text('...logging in')),
+      body: const Center(
+        child: Text('Loading...'),
+      ),
     );
   }
 }
